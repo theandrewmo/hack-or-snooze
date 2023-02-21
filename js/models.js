@@ -25,7 +25,8 @@ class Story {
 
   getHostName() {
     // UNIMPLEMENTED: complete this function!
-    return "hostname.com";
+    const newUrl = new URL(this.url)
+    return newUrl.hostname
   }
 }
 
@@ -75,15 +76,37 @@ class StoryList {
 
   async addStory(user, newStory) {
     // UNIMPLEMENTED: complete this function!
-    const token = user.loginToken;
       const response = await axios({
         url: `${BASE_URL}/stories`,
-        method: 'POST',
+        method: "POST",
         data: {
-          token, story: newStory
+          'token': user.loginToken, story: newStory
         }
       })
+      const newOne = new Story(response.data.story)
+      user.ownStories.unshift(newOne)
+      storyList.stories.unshift(newOne)
+  }
 
+  async removeStory(user, oldStory) {
+    try {
+      const token = user.loginToken;
+      const response = await axios({
+        url: `${BASE_URL}/stories/${oldStory}`,
+        method: "DELETE",
+        data: {
+          'token' : user.loginToken 
+        }
+      })
+      const deletedOne = new Story(response.data.story)
+      let x = (user.ownStories.findIndex(story => story.storyId == deletedOne.storyId))
+      if (x !== -1) user.ownStories.splice(x , 1);
+      let y = (storyList.stories.findIndex(story => story.storyId == deletedOne.storyId))
+      if (y !== -1) storyList.stories.splice(y , 1);
+    }
+    catch(e) {
+      alert('Error:' + e)
+    }
   }
 }
 
@@ -116,6 +139,25 @@ class User {
 
     // store the login token on the user so it's easy to find for API calls.
     this.loginToken = token;
+  }
+
+  static async addNewFavorite(username, storyId) {
+    const response = await axios({
+      url: `${BASE_URL}/users/${username}/favorites/${storyId}`,
+      method: "POST",
+      data: { 'token' : currentUser.loginToken }
+    })
+    currentUser.favorites = response.data.user.favorites.map(s => new Story(s)) 
+  }
+
+  static async removeFavorite(username, storyId) {
+    const response = await axios({
+      url: `${BASE_URL}/users/${username}/favorites/${storyId}`,
+      method: "DELETE",
+      data: { 'token' : currentUser.loginToken }
+    })
+    currentUser.favorites = response.data.user.favorites.map(s => new Story(s))
+
   }
 
   /** Register new user in API, make User instance & return it.

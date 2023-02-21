@@ -6,10 +6,12 @@ nav {
   align-items: center;
   padding: 5px 20px;
   border-radius: 3px 3px 0 0;
+  min-height: 4em;
 }
 
 .navbar-brand {
   font-weight: bold;
+  margin-right: 1.5em;
 }
 
 .nav-link {

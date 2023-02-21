@@ -32,8 +32,14 @@
 
 .story-author {
   margin-left: 2em;
+  margin-top: .3em;
+  margin-bottom: .3em;
+  color: green;
+  display: block;
 }
 
 .story-user {
+  margin-left: 2em;
   display: block;
+  color: rgb(235, 163, 7);
 }

@@ -3,6 +3,7 @@
 body {
   font-family: Arimo, sans-serif;
   margin: 8px 7.5vw;
+  background: linear-gradient(0.25turn, rgb(122, 169, 225), rgb(205, 181, 207) 33%, rgb(122, 169, 225))
 }
 
 h1 {
@@ -27,6 +28,10 @@ a {
 
 a:hover {
   text-decoration: underline;
+}
+
+hr {
+  border-top: none;
 }
 
 

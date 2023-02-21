@@ -34,3 +34,32 @@ function updateNavOnLogin() {
   $navLogOut.show();
   $navUserProfile.text(`${currentUser.username}`).show();
 }
+
+// show form to submit new story when user clicks 'submit' nav link
+
+function navDisplayForm() {
+  $favoriteStoriesList.hide();
+  $ownStoriesList.hide();
+  $allStoriesList.show();
+  $newStoryForm.show();
+}
+
+$navSubmit.on('click', navDisplayForm)
+
+// show user favorites when user clicks 'favorites' nav link
+
+function navDisplayFavorites() {
+  hidePageComponents();
+  putFavoritesOnPage()
+}
+
+$navFavorites.on('click', navDisplayFavorites)
+
+// show only users own stories when user clicks 'my stories' nav link
+
+function navDisplayMyStories() {
+  hidePageComponents();
+  putOwnStoriesOnPage()
+}
+
+$navMyStories.on('click', navDisplayMyStories)
