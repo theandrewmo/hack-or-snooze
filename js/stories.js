@@ -140,8 +140,8 @@ async function handleFavesAndDelete(e) {
   }
 }
 
-function renderList(list) {
-  if (list.id == 'all-stories-list')     putStoriesOnPage();
-  if (list.id == 'favorite-stories-list')     putFavoritesOnPage();
-  if (list.id == 'own-stories-list') putOwnStoriesOnPage();
+function renderList(type) {
+  if (type.id == 'all-stories-list')     putStoriesOnPage();
+  else if (type.id == 'favorite-stories-list')     putFavoritesOnPage();
+  else if (type.id == 'own-stories-list') putOwnStoriesOnPage();
 }
