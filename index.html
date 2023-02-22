@@ -92,13 +92,15 @@
     <h4>Login</h4>
     <div class="login-input">
       <label for="login-username">username</label>
-      <input id="login-username" autocomplete="current-username">
+      <input id="login-username" autocomplete="current-username" required>
+      <div id='incorrect-user'></div>
     </div>
     <div class="login-input">
       <label for="login-password">password</label>
-      <input id="login-password" type="password" autocomplete="current-password">
+      <input id="login-password" type="password" autocomplete="current-password" required>
+      <div id='incorrect-password'></div>
     </div>
-    <button type="submit">login</button>
+    <button type="submit" id="login-button">login</button>
     <hr>
   </form>
 
@@ -111,17 +113,31 @@
     <h4>Create Account</h4>
     <div class="login-input">
       <label for="signup-name">name</label>
-      <input id="signup-name" autocapitalize="words">
+      <input id="signup-name" autocapitalize="words" required>
     </div>
     <div class="login-input">
       <label for="signup-username">username</label>
-      <input id="signup-username" autocomplete="new-username">
+      <input id="signup-username" autocomplete="new-username" required>
+      <div id="username-taken"></div>
     </div>
     <div class="login-input">
       <label for="signup-password">password</label>
-      <input id="signup-password" autocomplete="new-password" type="password">
+      <input id="signup-password" autocomplete="new-password" type="password" required>
     </div>
     <button type="submit">create account</button>
+  </form>
+</section>
+
+<section class='container hidden' id="user-profile"> 
+  <form action="">
+    <div>name: <span id="profile-name"></span> </div>
+    <input type="text" name="new-name" id="new-name" required>
+    <button id="change-name">change name</button>
+  </form>
+  <form action="">
+    <div>password: <span id="profile-password"></span> </div>
+    <input name="new-password" id="new-password" type="password" required>
+    <button id="change-password">change password</button>
   </form>
 </section>
 

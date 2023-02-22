@@ -103,9 +103,27 @@ class StoryList {
       if (x !== -1) user.ownStories.splice(x , 1);
       let y = (storyList.stories.findIndex(story => story.storyId == deletedOne.storyId))
       if (y !== -1) storyList.stories.splice(y , 1);
+      let z = (user.favorites.findIndex(story => story.storyId == deletedOne.storyId))
+      if (z !== -1) user.favorites.splice(z , 1);
     }
     catch(e) {
       alert('Error:' + e)
+    }
+  }
+
+  static async editStory(user, story, update) {
+    try{
+      const response = await axios({
+        url: `${BASE_URL}/stories/${story}`,
+        method: "PATCH",
+        data: {
+        'token' : user.loginToken,
+        'story' : update
+        }
+      })
+    } 
+    catch(e) {
+      alert(e.message)
     }
   }
 }
@@ -182,7 +200,7 @@ class User {
         name: user.name,
         createdAt: user.createdAt,
         favorites: user.favorites,
-        ownStories: user.stories
+        ownStories: user.stories,
       },
       response.data.token
     );
@@ -195,24 +213,41 @@ class User {
    */
 
   static async login(username, password) {
-    const response = await axios({
-      url: `${BASE_URL}/login`,
-      method: "POST",
-      data: { user: { username, password } },
-    });
+    $loginButton.attr('disabled', true)
 
-    let { user } = response.data;
+    try {
+        const response = await axios({
+        url: `${BASE_URL}/login`,
+        method: "POST",
+        data: { user: { username, password } },
+      });
 
-    return new User(
-      {
-        username: user.username,
-        name: user.name,
-        createdAt: user.createdAt,
-        favorites: user.favorites,
-        ownStories: user.stories
-      },
-      response.data.token
-    );
+      let { user } = response.data;
+
+      $loginButton.attr('disabled', false)
+
+      return new User(
+       {
+          username: user.username,
+          name: user.name,
+          createdAt: user.createdAt,
+          favorites: user.favorites,
+          ownStories: user.stories
+        },
+       response.data.token
+      );
+    }
+    catch(e) {
+      if (e.response.status == 404) {
+        $loginUsername.css('border', '2px solid red')
+        $incorrectUser.text(e.response.data.error.message);
+      }
+      else if (e.response.status == 401) {
+        $loginPassword.css('border', '2px solid red')
+        $incorrectPassword.text(e.response.data.error.message);
+      }
+      $loginButton.attr('disabled', false)
+    }
   }
 
   /** When we already have credentials (token & username) for a user,
@@ -243,5 +278,63 @@ class User {
       console.error("loginViaStoredCredentials failed", err);
       return null;
     }
+  }
+
+  static async getUser() {
+    try {
+      const response = await axios({
+      url: `${BASE_URL}/users/${currentUser.username}/?token=${currentUser.loginToken}`,
+      method: "GET"
+      });
+      console.log(response)
+    }
+
+    catch(e) {
+      console.log(e)
+    }
+  }
+
+  static async updateName(name) {
+    try {
+      const response = await axios({
+      url: `${BASE_URL}/users/${currentUser.username}`,
+        method: "PATCH",
+        data: {
+          'token': currentUser.loginToken,
+          "user": {
+            "name": name
+          }
+        },
+      });
+      $profileName.text(response.data.user.name);
+    }
+    catch(e) {
+      alert(e.message)
+    }
+    $newName.val('');
+    $changeName.attr('disabled', false);
+    $changeName.text('change name');
+  }
+
+  static async updatePassword(password) {
+    try {
+      const response = await axios({
+      url: `${BASE_URL}/users/${currentUser.username}`,
+        method: "PATCH",
+        data: {
+          'token': currentUser.loginToken,
+          "user": {
+            "password": password
+          }
+        },
+      });
+      alert('password successfully updated');
+    }
+    catch(e) {
+      alert(e.message)
+    }
+    $newPassword.val('');
+    $changePassword.attr('disabled', false);
+    $changePassword.text('change password'); 
   }
 }

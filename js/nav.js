@@ -65,3 +65,31 @@ function navDisplayMyStories() {
 }
 
 $navMyStories.on('click', navDisplayMyStories)
+
+async function navUserProfile() {
+  hidePageComponents();
+  $profileName.text(currentUser.name);
+  $userProfile.show();
+}
+
+$navUserProfile.on('click', navUserProfile)
+
+function changeName() {
+  if($newName.val()) {
+    $changeName.attr('disabled', true);
+    $changeName.text('updating...');
+    User.updateName($newName.val());
+  }
+}
+
+$changeName.on('click', changeName)
+
+function changePassword() {
+  if($newPassword.val()) {
+    $changePassword.attr('disabled', true);
+    $changePassword.text('updating...');
+    User.updatePassword($newPassword.val());
+  }
+}
+
+$changePassword.on('click', changePassword)

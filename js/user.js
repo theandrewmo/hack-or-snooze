@@ -12,6 +12,10 @@ let currentUser;
 async function login(evt) {
   console.debug("login", evt);
   evt.preventDefault();
+  $incorrectUser.text('')
+  $loginUsername.css('border', 'none')
+  $incorrectUser.text('').css('border', 'none')
+  $loginPassword.css('border', 'none')
 
   // grab the username and password
   const username = $("#login-username").val();
@@ -21,10 +25,11 @@ async function login(evt) {
   // which we'll make the globally-available, logged-in user.
   currentUser = await User.login(username, password);
 
-  $loginForm.trigger("reset");
-
-  saveUserCredentialsInLocalStorage();
-  updateUIOnUserLogin();
+  if (currentUser) {
+    $loginForm.trigger("reset");
+    saveUserCredentialsInLocalStorage();
+    updateUIOnUserLogin();
+  }
 }
 
 $loginForm.on("submit", login);
@@ -41,12 +46,21 @@ async function signup(evt) {
 
   // User.signup retrieves user info from API and returns User instance
   // which we'll make the globally-available, logged-in user.
-  currentUser = await User.signup(username, password, name);
+  try {
+    currentUser = await User.signup(username, password, name);
 
-  saveUserCredentialsInLocalStorage();
-  updateUIOnUserLogin();
+    saveUserCredentialsInLocalStorage();
+    updateUIOnUserLogin();
+    $signupForm.trigger("reset");
+  }
+  catch(e) {
+    if(e.response.status == 409) {
+      $('#username-taken').text('username already in use...try again');
+      $('#signup-username').css('border', '2px solid red').focus();
+    };
+  }
 
-  $signupForm.trigger("reset");
+
 }
 
 $signupForm.on("submit", signup);
@@ -62,7 +76,7 @@ function logout(evt) {
   location.reload();
 }
 
-$navLogOut.on("click", logout);
+$navLogOut.on("click",logout);
 
 /******************************************************************************
  * Storing/recalling previously-logged-in-user with localStorage

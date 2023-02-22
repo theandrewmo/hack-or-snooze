@@ -12,3 +12,16 @@
 .account-forms-container {
   padding-left: 20px;
 }
+
+#incorrect-user, #incorrect-password, #username-taken {
+  margin-left: 5rem;
+  margin-top: 1rem;
+  font-size: .8rem;
+  color: red;
+}
+
+#user-profile button {
+  width: 10rem;
+}
+
+
