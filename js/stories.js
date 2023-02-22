@@ -28,7 +28,7 @@ $newStoryForm.on('submit', storyFormSubmit)
 
 async function getAndShowStoriesOnStart() {
   storyList = await StoryList.getStories();
-  $storiesLoadingMsg.remove();
+  $storiesLoadingMsg.hide();
   putStoriesOnPage();
 }
 

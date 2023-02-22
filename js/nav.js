@@ -93,3 +93,20 @@ function changePassword() {
 }
 
 $changePassword.on('click', changePassword)
+
+async function infiniteScroll() {
+  console.log('scroll fire')
+  const newList = await StoryList.getStories();
+  // $storiesLoadingMsg.hide();
+  for (let story of newList.stories) {
+    const $story = generateStoryMarkup(story);
+    $allStoriesList.append($story);
+  }
+}
+
+window.addEventListener('scroll', function() {
+  const {scrollHeight, scrollTop, clientHeight} = document.documentElement;
+  if(scrollTop + clientHeight > scrollHeight - 1) {
+    infiniteScroll();
+  }
+})
